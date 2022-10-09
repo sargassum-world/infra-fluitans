@@ -6,11 +6,11 @@ job "fluitans" {
     max_parallel = 1
   }
 
-  group "fluitans" {
+  group {
     count = 1
 
     network {
-      port "fluitans" {
+      port "http" {
         static = 3000
       }
     }
@@ -25,8 +25,9 @@ job "fluitans" {
       driver = "docker"
 
       config {
-        image   = "ghcr.io/sargassum-world/fluitans:${fluitans_version}"
-        ports   = ["fluitans"]
+        image        = "ghcr.io/sargassum-world/fluitans:${fluitans_version}"
+        ports        = ["http"]
+        network_mode = "host"
       }
 
       env {
