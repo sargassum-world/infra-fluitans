@@ -16,6 +16,12 @@ job "fluitans" {
     }
 
     task "server" {
+      service {
+        provider = "nomad"
+        name     = "fluitans_server"
+        port = "fluitns"
+      }
+
       driver = "docker"
 
       config {
