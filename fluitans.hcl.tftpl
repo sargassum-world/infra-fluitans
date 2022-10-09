@@ -1,0 +1,44 @@
+job "fluitans" {
+  type = "service"
+  datacenters = ["sargassum-foundations"]
+
+  update {
+    max_parallel = 1
+  }
+
+  group "fluitans" {
+    count = 1
+
+    network {
+      port "fluitans" {
+        static = 3000
+      }
+    }
+
+    task "server" {
+      driver = "docker"
+
+      config {
+        image   = "ghcr.io/sargassum-world/fluitans:${fluitans_version}"
+        ports   = ["fluitans"]
+      }
+
+      env {
+        ZTCONTROLLER_SERVER     = "${ztcontroller_server}"
+        ZTCONTROLLER_AUTHTOKEN  = "${ztcontroller_authtoken}"
+        DNS_DOMAIN_NAME         = "${dns_domain_name}"
+        DNS_SERVER              = "https://desec.io"
+        DNS_AUTHTOKEN           = "${dns_authtoken}"
+        SESSIONS_AUTH_KEY       = "${sessions_auth_key}"
+        SESSIONS_ENCRYPTION_KEY = "${sessions_encryption_key}"
+        AUTHN_ADMIN_PW_HASH     = "${authn_admin_pw_hash}"
+        TURBOSTREAMS_HASH_KEY   = "${turbostreams_hash_key}"
+      }
+
+      resources {
+        cpu    = 100
+        memory = 64
+      }
+    }
+  }
+}
