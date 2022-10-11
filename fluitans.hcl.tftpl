@@ -10,24 +10,21 @@ job "fluitans" {
     count = 1
 
     network {
-      port "http" {
-        static = 3000
-      }
+      port "http" {}
+    }
+
+    service {
+      name     = "fluitans-webapp"
+      provider = "nomad"
+      port     = "http"
     }
 
     task "server" {
-      service {
-        provider = "nomad"
-        name     = "fluitans-server"
-        port     = "http"
-      }
-
       driver = "docker"
 
       config {
-        image        = "ghcr.io/sargassum-world/fluitans:${fluitans_version}"
-        ports        = ["http"]
-        network_mode = "host"
+        image = "ghcr.io/sargassum-world/fluitans:${fluitans_version}"
+        ports = ["http"]
       }
 
       env {
@@ -43,8 +40,9 @@ job "fluitans" {
       }
 
       resources {
-        cpu    = 100
-        memory = 128
+        cpu        = 100
+        memory     = 128
+        memory_max = 256
       }
     }
   }
