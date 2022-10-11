@@ -10,7 +10,9 @@ job "fluitans" {
     count = 1
 
     network {
-      port "http" {}
+      port "http" {
+        to = 3000
+      }
     }
 
     service {
