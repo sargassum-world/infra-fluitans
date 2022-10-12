@@ -16,12 +16,6 @@ job "fluitans" {
       }
     }
 
-    service {
-      name     = "fluitans-webapp"
-      provider = "nomad"
-      port     = "http"
-    }
-
     task "server" {
       driver = "docker"
 
@@ -46,6 +40,16 @@ job "fluitans" {
         cpu        = 100
         memory     = 128
         memory_max = 256
+      }
+
+      service {
+        name     = "fluitans"
+        provider = "nomad"
+        port     = "http"
+        tags = [
+          "caddy.enable=true",
+          "caddy.reverse_proxy.host=fluitans.sargassum.world",
+        ]
       }
     }
   }
