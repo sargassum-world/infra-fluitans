@@ -48,6 +48,7 @@ job "fluitans" {
         port     = "http"
         tags = [
           "caddy.enable=true",
+          "caddy.reverse_proxy.public=true",
           "caddy.reverse_proxy.host=fluitans.sargassum.world",
         ]
       }
