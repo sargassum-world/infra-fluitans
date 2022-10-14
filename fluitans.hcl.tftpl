@@ -42,7 +42,7 @@ job "${job_name}" {
       resources {
         cpu        = 50
         memory     = 128
-        memory_max = 512
+        memory_max = 256
       }
 
       service {
@@ -86,8 +86,8 @@ job "${job_name}" {
 
       resources {
         cpu        = 500
-        memory     = 8
-        memory_max = 16
+        memory     = 16
+        memory_max = 32
       }
 
       service {
