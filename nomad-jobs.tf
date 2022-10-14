@@ -33,6 +33,7 @@ resource "nomad_job" "fluitans" {
     # Job variables
     job_name         = var.job_name
     public_service   = var.job_service_public
+    publish_service  = var.job_service_publish
     fluitans_version = var.fluitans_version
     # Application variables
     ztcontroller_authtoken  = random_password.authtoken.result
