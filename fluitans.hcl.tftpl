@@ -11,7 +11,7 @@ job "fluitans" {
 
     network {
       mode = "host"
-      port "http" {
+      port "webapp" {
         to = 3000
       }
       port "zerotier_api" {
@@ -24,7 +24,7 @@ job "fluitans" {
 
       config {
         image = "ghcr.io/sargassum-world/fluitans:${fluitans_version}"
-        ports = ["http"]
+        ports = ["webapp"]
       }
 
       env {
@@ -48,7 +48,7 @@ job "fluitans" {
       service {
         name     = "fluitans"
         provider = "nomad"
-        port     = "http"
+        port     = "webapp"
         tags = [
           "caddy.enable=true",
           "caddy.reverse_proxy.public=true",
@@ -73,8 +73,8 @@ job "fluitans" {
 
       resources {
         cpu        = 50
-        memory     = 32
-        memory_max = 64
+        memory     = 16
+        memory_max = 32
       }
     }
   }
