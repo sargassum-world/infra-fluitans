@@ -53,7 +53,7 @@ job "${job_name}" {
           "caddy.enable=true",
           "caddy.reverse_proxy.public=${public_service}",
           "caddy.reverse_proxy.custom_hosts=${publish_service}",
-          "caddy.reverse_proxy.host=${service_name}.sargassum.world",
+          "caddy.reverse_proxy.host=${custom_name}",
         ]
       }
     }

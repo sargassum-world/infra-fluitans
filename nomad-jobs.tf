@@ -34,7 +34,8 @@ resource "nomad_job" "fluitans" {
     job_name         = replace(var.job_name, "-", "_")
     service_name     = replace(var.job_name, "_", "-")
     public_service   = var.job_service_public
-    publish_service  = var.job_service_publish
+    publish_service  = var.job_service_custom_name != ""
+    custom_name      = var.job_service_custom_name
     fluitans_version = var.fluitans_version
     # Application variables
     ztcontroller_authtoken  = random_password.authtoken.result
