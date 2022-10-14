@@ -72,7 +72,7 @@ job "fluitans" {
       }
 
       env {
-        ZTCONTROLLER_AUTHTOKEN = "${ztcontroller_authtoken}"  # TODO: pass in the authtoken in as a secret mount
+        ZEROTIER_API_SECRET = "${ztcontroller_authtoken}"  # TODO: pass in the authtoken in as a secret mount
       }
 
       resources {
