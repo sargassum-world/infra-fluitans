@@ -14,6 +14,9 @@ job "fluitans" {
       port "http" {
         to = 3000
       }
+      port "zerotier" {
+        to = 9993
+      }
     }
 
     task "server" {
@@ -25,8 +28,8 @@ job "fluitans" {
       }
 
       env {
-        ZTCONTROLLER_SERVER     = "${ztcontroller_server}"
-        ZTCONTROLLER_AUTHTOKEN  = "${ztcontroller_authtoken}"
+        ZTCONTROLLER_SERVER     = "$${NOMAD_ADDR_zerotier_controller}" # Nomad variable, not Terraform template variable
+        ZTCONTROLLER_AUTHTOKEN  = "${ztcontroller_authtoken}" # TODO: generate an authtoken and pass it to both tasks
         DNS_DOMAIN_NAME         = "${dns_domain_name}"
         DNS_SERVER              = "https://desec.io"
         DNS_AUTHTOKEN           = "${dns_authtoken}"
@@ -51,6 +54,27 @@ job "fluitans" {
           "caddy.reverse_proxy.public=true",
           "caddy.reverse_proxy.host=fluitans.sargassum.world",
         ]
+      }
+    }
+
+    task "zerotier_controller" {
+      driver = "docker"
+
+      config {
+        image = "ghcr.io/sargassum-world/docker-zerotier-controller:v1.8.1"
+        ports = ["zerotier"]
+
+        mount {
+          type   = "volume"
+          target = "/var/lib/zerotier-one"
+          source = "zerotier-controller-pslive"
+        }
+      }
+
+      resources {
+        cpu        = 50
+        memory     = 32
+        memory_max = 64
       }
     }
   }

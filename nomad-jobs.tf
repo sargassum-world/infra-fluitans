@@ -1,7 +1,6 @@
 resource "nomad_job" "fluitans" {
   jobspec = templatefile("${path.module}/fluitans.hcl.tftpl", {
     fluitans_version        = var.fluitans_version
-    ztcontroller_server     = var.ztcontroller_server
     ztcontroller_authtoken  = var.ztcontroller_authtoken
     dns_domain_name         = var.dns_domain_name
     dns_authtoken           = var.dns_authtoken
