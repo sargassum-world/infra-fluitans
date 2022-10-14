@@ -8,6 +8,10 @@ terraform {
   }
 
   required_providers {
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.4.3"
+    }
     desec = {
       source  = "Valodim/desec"
       version = "~> 0.3.0"

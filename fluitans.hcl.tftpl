@@ -29,7 +29,7 @@ job "fluitans" {
 
       env {
         ZTCONTROLLER_SERVER     = "http://$${NOMAD_ADDR_zerotier_api}" # Nomad variable, not Terraform template variable
-        ZTCONTROLLER_AUTHTOKEN  = "${ztcontroller_authtoken}" # TODO: generate an authtoken and pass it to both tasks
+        ZTCONTROLLER_AUTHTOKEN  = "${ztcontroller_authtoken}"  # TODO: randomly generate the authtoken
         DNS_DOMAIN_NAME         = "${dns_domain_name}"
         DNS_SERVER              = "https://desec.io"
         DNS_AUTHTOKEN           = "${dns_authtoken}"
@@ -69,6 +69,10 @@ job "fluitans" {
           target = "/var/lib/zerotier-one"
           source = "zerotier-controller-pslive"
         }
+      }
+
+      env {
+        ZTCONTROLLER_AUTHTOKEN = "${ztcontroller_authtoken}"  # TODO: pass in the authtoken in as a secret mount
       }
 
       resources {
