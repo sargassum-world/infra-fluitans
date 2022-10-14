@@ -37,6 +37,7 @@ variable "job_service_public" {
 variable "job_service_custom_name" {
   type        = string
   description = "The custom domain name for publishing the webapp"
+  default     = ""
 }
 
 variable "fluitans_version" {
