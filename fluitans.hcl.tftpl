@@ -52,6 +52,7 @@ job "${job_name}" {
         tags = [
           "caddy.enable=true",
           "caddy.reverse_proxy.public=${public_service}",
+          "caddy.reverse_proxy.custom_hosts=${publish_service}",
           "caddy.reverse_proxy.host=${job_name}.sargassum.world",
         ]
       }

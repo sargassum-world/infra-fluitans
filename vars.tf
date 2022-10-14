@@ -34,6 +34,11 @@ variable "job_service_public" {
   description = "Whether to publicly expose the webapp"
 }
 
+variable "job_service_publish" {
+  type        = bool
+  description = "Whether to publish the webapp as a subname directly under the root domain name"
+}
+
 variable "fluitans_version" {
   type        = string
   description = "Version tag of the container for fluitans"
