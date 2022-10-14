@@ -30,7 +30,11 @@ resource "random_password" "turbostreams_hash" {
 
 resource "nomad_job" "fluitans" {
   jobspec = templatefile("${path.module}/fluitans.hcl.tftpl", {
-    fluitans_version        = var.fluitans_version
+    # Job variables
+    job_name         = var.job_name
+    public_service   = var.job_service_public
+    fluitans_version = var.fluitans_version
+    # Application variables
     ztcontroller_authtoken  = random_password.authtoken.result
     dns_domain_name         = var.dns_domain_name
     dns_authtoken           = var.dns_authtoken

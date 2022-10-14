@@ -22,6 +22,18 @@ variable "desec_api_key" {
   sensitive   = true
 }
 
+# Job variables
+
+variable "job_name" {
+  type        = string
+  description = "Name of the Nomad job and service"
+}
+
+variable "job_service_public" {
+  type        = bool
+  description = "Whether to publicly expose the webapp"
+}
+
 variable "fluitans_version" {
   type        = string
   description = "Version tag of the container for fluitans"

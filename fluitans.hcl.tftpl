@@ -1,4 +1,4 @@
-job "fluitans" {
+job "${job_name}" {
   type = "service"
   datacenters = ["sargassum-foundations"]
 
@@ -6,7 +6,7 @@ job "fluitans" {
     max_parallel = 1
   }
 
-  group "webapp" {
+  group "app" {
     count = 1
 
     network {
@@ -19,7 +19,7 @@ job "fluitans" {
       }
     }
 
-    task "server" {
+    task "webapp" {
       driver = "docker"
 
       config {
@@ -40,19 +40,19 @@ job "fluitans" {
       }
 
       resources {
-        cpu        = 100
-        memory     = 128
-        memory_max = 256
+        cpu        = 50
+        memory     = 64
+        memory_max = 128
       }
 
       service {
-        name     = "fluitans"
+        name     = "${job_name}"
         provider = "nomad"
         port     = "webapp"
         tags = [
           "caddy.enable=true",
-          "caddy.reverse_proxy.public=true",
-          "caddy.reverse_proxy.host=fluitans.sargassum.world",
+          "caddy.reverse_proxy.public=${public_service}",
+          "caddy.reverse_proxy.host=${job_name}.sargassum.world",
         ]
       }
     }
@@ -70,16 +70,33 @@ job "fluitans" {
           source   = "zerotier-controller-pslive"
           readonly = false
         }
+
+        mount {
+          type     = "bind"
+          target   = "/var/lib/zerotier-one/authtoken.secret"
+          source   = "secrets/authtoken.secret"
+          readonly = true
+        }
       }
 
-      env {
-        ZEROTIER_API_SECRET = "${ztcontroller_authtoken}"  # TODO: pass in the authtoken in as a secret mount
+      template {
+        data = "${ztcontroller_authtoken}"
+        destination = "secrets/authtoken.secret"
       }
 
       resources {
-        cpu        = 50
+        cpu        = 20
         memory     = 16
         memory_max = 32
+      }
+
+      service {
+        name     = "${job_name}-ztcontroller"
+        provider = "nomad"
+        port     = "zerotier_api"
+        tags = [
+          "caddy.enable=true",
+        ]
       }
     }
   }
