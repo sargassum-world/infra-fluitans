@@ -45,6 +45,12 @@ variable "fluitans_version" {
   description = "Version tag of the container for fluitans"
 }
 
+variable "job_service_ztcontroller_public" {
+  type        = string
+  description = "Whether to publicly expose the ZeroTier network controller"
+  default     = false
+}
+
 # Application variables
 
 variable "dns_domain_name" {

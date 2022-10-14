@@ -97,6 +97,7 @@ job "${job_name}" {
         port     = "zerotier_api"
         tags = [
           "caddy.enable=true",
+          "caddy.reverse_proxy.public=${ztcontroller_public_service}",
         ]
       }
     }
