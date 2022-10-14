@@ -61,13 +61,14 @@ job "fluitans" {
       driver = "docker"
 
       config {
-        image = "ghcr.io/sargassum-world/docker-zerotier-controller:v1.8.1"
+        image = "ghcr.io/sargassum-world/docker-zerotier-controller:v1.10.1"
         ports = ["zerotier_api"]
 
         mount {
-          type   = "volume"
-          target = "/var/lib/zerotier-one"
-          source = "zerotier-controller-pslive"
+          type     = "volume"
+          target   = "/var/lib/zerotier-one"
+          source   = "zerotier-controller-pslive"
+          readonly = false
         }
       }
 
