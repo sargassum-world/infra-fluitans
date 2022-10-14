@@ -14,7 +14,7 @@ job "fluitans" {
       port "http" {
         to = 3000
       }
-      port "zerotier" {
+      port "zerotier_api" {
         to = 9993
       }
     }
@@ -28,7 +28,7 @@ job "fluitans" {
       }
 
       env {
-        ZTCONTROLLER_SERVER     = "$${NOMAD_ADDR_zerotier_controller}" # Nomad variable, not Terraform template variable
+        ZTCONTROLLER_SERVER     = "$${NOMAD_ADDR_zerotier_api}" # Nomad variable, not Terraform template variable
         ZTCONTROLLER_AUTHTOKEN  = "${ztcontroller_authtoken}" # TODO: generate an authtoken and pass it to both tasks
         DNS_DOMAIN_NAME         = "${dns_domain_name}"
         DNS_SERVER              = "https://desec.io"
@@ -62,7 +62,7 @@ job "fluitans" {
 
       config {
         image = "ghcr.io/sargassum-world/docker-zerotier-controller:v1.8.1"
-        ports = ["zerotier"]
+        ports = ["zerotier_api"]
 
         mount {
           type   = "volume"
