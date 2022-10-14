@@ -68,7 +68,7 @@ job "${job_name}" {
         mount {
           type     = "volume"
           target   = "/var/lib/zerotier-one"
-          source   = "zerotier-controller-pslive"
+          source   = "zerotier-controller-${job_name}"
           readonly = false
         }
 
