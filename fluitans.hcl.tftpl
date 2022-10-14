@@ -28,7 +28,7 @@ job "fluitans" {
       }
 
       env {
-        ZTCONTROLLER_SERVER     = "$${NOMAD_ADDR_zerotier_api}" # Nomad variable, not Terraform template variable
+        ZTCONTROLLER_SERVER     = "http://$${NOMAD_ADDR_zerotier_api}" # Nomad variable, not Terraform template variable
         ZTCONTROLLER_AUTHTOKEN  = "${ztcontroller_authtoken}" # TODO: generate an authtoken and pass it to both tasks
         DNS_DOMAIN_NAME         = "${dns_domain_name}"
         DNS_SERVER              = "https://desec.io"
