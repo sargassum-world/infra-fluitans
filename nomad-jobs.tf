@@ -31,7 +31,8 @@ resource "random_password" "turbostreams_hash" {
 resource "nomad_job" "fluitans" {
   jobspec = templatefile("${path.module}/fluitans.hcl.tftpl", {
     # Job variables
-    job_name         = var.job_name
+    job_name         = replace(var.job_name, "-", "_")
+    service_name     = replace(var.job_name, "_", "-")
     public_service   = var.job_service_public
     publish_service  = var.job_service_publish
     fluitans_version = var.fluitans_version

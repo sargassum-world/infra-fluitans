@@ -46,14 +46,14 @@ job "${job_name}" {
       }
 
       service {
-        name     = "${job_name}"
+        name     = "${service_name}"
         provider = "nomad"
         port     = "webapp"
         tags = [
           "caddy.enable=true",
           "caddy.reverse_proxy.public=${public_service}",
           "caddy.reverse_proxy.custom_hosts=${publish_service}",
-          "caddy.reverse_proxy.host=${job_name}.sargassum.world",
+          "caddy.reverse_proxy.host=${service_name}.sargassum.world",
         ]
       }
     }
@@ -68,7 +68,7 @@ job "${job_name}" {
         mount {
           type     = "volume"
           target   = "/var/lib/zerotier-one"
-          source   = "zerotier-controller-${job_name}"
+          source   = "zerotier-controller-${service_name}"
           readonly = false
         }
 
@@ -92,7 +92,7 @@ job "${job_name}" {
       }
 
       service {
-        name     = "${job_name}-ztcontroller"
+        name     = "${service_name}-ztcontroller"
         provider = "nomad"
         port     = "zerotier_api"
         tags = [
