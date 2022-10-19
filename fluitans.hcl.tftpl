@@ -36,15 +36,29 @@ job "${job_name}" {
 
       env {
         ZTCONTROLLER_SERVER     = "http://$${NOMAD_ADDR_zerotier_api}" # Nomad variable, not Terraform template variable
-        ZTCONTROLLER_AUTHTOKEN  = "${ztcontroller_authtoken}"  # TODO: randomly generate the authtoken
         DNS_DOMAIN_NAME         = "${dns_domain_name}"
         DNS_SERVER              = "https://desec.io"
-        DNS_AUTHTOKEN           = "${dns_authtoken}"
-        SESSIONS_AUTH_KEY       = "${sessions_auth_key}"
-        SESSIONS_ENCRYPTION_KEY = "${sessions_encryption_key}"
-        AUTHN_ADMIN_PW_HASH     = "${authn_admin_pw_hash}"
-        TURBOSTREAMS_HASH_KEY   = "${turbostreams_hash_key}"
         DATABASE_URI            = "/data/db.sqlite3"
+      }
+
+      template {
+        data = <<-EOH
+          ZTCONTROLLER_AUTHTOKEN="${ztcontroller_authtoken}"
+          DNS_AUTHTOKEN="${dns_authtoken}"
+        EOH
+        destination = "secrets/api-keys.env"
+        env         = true
+      }
+
+      template {
+        data = <<-EOH
+          SESSIONS_AUTH_KEY="${sessions_auth_key}"
+          SESSIONS_ENCRYPTION_KEY="${sessions_encryption_key}"
+          AUTHN_ADMIN_PW_HASH="${authn_admin_pw_hash}"
+          TURBOSTREAMS_HASH_KEY="${turbostreams_hash_key}"
+        EOH
+        destination = "secrets/service-keys.env"
+        env         = true
       }
 
       resources {
