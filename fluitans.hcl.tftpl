@@ -25,6 +25,13 @@ job "${job_name}" {
       config {
         image = "ghcr.io/sargassum-world/fluitans:${fluitans_version}"
         ports = ["webapp"]
+
+        mount {
+          type     = "volume"
+          target   = "/data"
+          source   = "${service_name}-data"
+          readonly = false
+        }
       }
 
       env {
@@ -37,6 +44,7 @@ job "${job_name}" {
         SESSIONS_ENCRYPTION_KEY = "${sessions_encryption_key}"
         AUTHN_ADMIN_PW_HASH     = "${authn_admin_pw_hash}"
         TURBOSTREAMS_HASH_KEY   = "${turbostreams_hash_key}"
+        DATABASE_URI            = "/data/db.sqlite3"
       }
 
       resources {
