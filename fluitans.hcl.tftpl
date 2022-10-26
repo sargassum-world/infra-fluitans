@@ -77,6 +77,14 @@ job "${job_name}" {
           "caddy.reverse_proxy.custom_hosts=${publish_service}",
           "caddy.reverse_proxy.host=${custom_name}",
         ]
+
+        check {
+          type     = "http"
+          port     = "webapp"
+          path     = "/"
+          interval = "5s"
+          timeout  = "2s"
+        }
       }
     }
 
@@ -121,6 +129,18 @@ job "${job_name}" {
           "caddy.enable=true",
           "caddy.reverse_proxy.public=${ztcontroller_public_service}",
         ]
+
+        check {
+          type     = "http"
+          port     = "zerotier_api"
+          path     = "/status"
+          interval = "5s"
+          timeout  = "2s"
+
+          header {
+            X-ZT1-Auth = ["${ztcontroller_authtoken}"]
+          }
+        }
       }
     }
   }
