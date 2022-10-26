@@ -28,7 +28,7 @@ job "${job_name}" {
 
         mount {
           type     = "volume"
-          target   = "/var/pslive/data"
+          target   = "/var/fluitans/data"
           source   = "${service_name}-data"
           readonly = false
         }
@@ -38,7 +38,7 @@ job "${job_name}" {
         ZTCONTROLLER_SERVER     = "http://$${NOMAD_ADDR_zerotier_api}" # Nomad variable, not Terraform template variable
         DNS_DOMAIN_NAME         = "${dns_domain_name}"
         DNS_SERVER              = "https://desec.io"
-        DATABASE_URI            = "file:/var/pslive/data/db.sqlite3"
+        DATABASE_URI            = "file:/var/fluitans/data/db.sqlite3"
       }
 
       template {
