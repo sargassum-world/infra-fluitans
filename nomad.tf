@@ -21,7 +21,7 @@ resource "random_password" "sessions_encryption" {
   }
 }
 
-resource "random_password" "turbostreams_hash" {
+resource "random_password" "actioncable_hash" {
   length = 32
   keepers = {
     revision = 1
@@ -32,6 +32,8 @@ resource "nomad_job" "fluitans" {
   jobspec = templatefile("${path.module}/fluitans.hcl.tftpl", {
     # Job variables
     job_name                    = replace(var.job_name, "-", "_")
+    datacenter                  = var.job_datacenter
+    hostname_constraint         = var.job_hostname_constraint
     service_name                = replace(var.job_name, "_", "-")
     public_service              = var.job_service_public
     publish_service             = var.job_service_custom_name != ""
@@ -45,7 +47,7 @@ resource "nomad_job" "fluitans" {
     sessions_auth_key       = base64encode(random_password.sessions_auth.result)
     sessions_encryption_key = base64encode(random_password.sessions_encryption.result)
     authn_admin_pw_hash     = var.authn_admin_pw_hash
-    turbostreams_hash_key   = base64encode(random_password.turbostreams_hash.result)
+    actioncable_hash_key    = base64encode(random_password.actioncable_hash.result)
   })
 
   hcl2 {

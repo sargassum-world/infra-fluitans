@@ -1,6 +1,11 @@
 job "${job_name}" {
   type = "service"
-  datacenters = ["sargassum-foundations"]
+  datacenters = ["${datacenter}"]
+
+  constraint {
+    attribute = "$${attr.unique.hostname}" # Nomad variable, not Terraform template variable
+    value = "${hostname_constraint}"
+  }
 
   update {
     max_parallel = 1
@@ -55,7 +60,7 @@ job "${job_name}" {
           SESSIONS_AUTH_KEY="${sessions_auth_key}"
           SESSIONS_ENCRYPTION_KEY="${sessions_encryption_key}"
           AUTHN_ADMIN_PW_HASH="${authn_admin_pw_hash}"
-          TURBOSTREAMS_HASH_KEY="${turbostreams_hash_key}"
+          ACTIONCABLE_HASH_KEY="${actioncable_hash_key}"
         EOH
         destination = "secrets/service-keys.env"
         env         = true
@@ -116,9 +121,9 @@ job "${job_name}" {
       }
 
       resources {
-        cpu        = 500
-        memory     = 16
-        memory_max = 64
+        cpu        = 1000
+        memory     = 32
+        memory_max = 128
       }
 
       service {

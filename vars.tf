@@ -29,6 +29,17 @@ variable "job_name" {
   description = "Name of the Nomad job and service"
 }
 
+variable "job_datacenter" {
+  type        = string
+  description = "Name of the Nomad datacenter to run the job"
+  default     = "sargassum-foundations"
+}
+
+variable "job_hostname_constraint" {
+  type        = string
+  description = "Hostname of the Nomad node to run the job"
+}
+
 variable "job_service_public" {
   type        = bool
   description = "Whether to publicly expose the webapp"
