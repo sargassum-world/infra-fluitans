@@ -39,21 +39,13 @@ job "${job_name}" {
       }
 
       env {
-        # For nicer display names by indirection and HTTPS we could instead use the reverse-proxied
-        # domain name, e.g. fluitans-pslive-ztcontroller.s.foundations.infra.sargassum.world instead
-        # of a bare IP address. However, that may not be necessary - and it would introduce coupling
-        # with the platform's Caddy configuration. It would be better to instead associate display
-        # names with controller ZeroTier addresses in a database table in Fluitans. And for HTTPS
-        # we should just use Consul Connect.
-        # ZTCONTROLLER_SERVER = "http://$${NOMAD_ADDR_zerotier_api}" # Nomad variable, not Terraform template variable
         DNS_DOMAIN_NAME     = "${dns_domain_name}"
         DNS_SERVER          = "https://desec.io"
         DATABASE_URI        = "file:/var/fluitans/data/db.sqlite3"
       }
 
       template {
-        # We have to manually process IP addresses to wrap square brackets around IPv6 addresses,
-        # because apparently Nomad doesn't do that.
+        # TODO: provide a display name for the controller using the Nomad service name
         data = <<-EOH
           {{- range $service := nomadService "${service_name}-ztcontroller" -}}
             {{- $upstreamAddress := $service.Address -}}
