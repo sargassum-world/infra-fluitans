@@ -43,7 +43,7 @@ variable "job_hostname_constraint" {
 variable "job_host_network" {
   type        = string
   description = "Name of the host network to use for port bindings"
-  default     = "foundations"
+  default     = "foundations_ipv6"
 }
 
 variable "job_service_public" {
