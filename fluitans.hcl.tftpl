@@ -32,7 +32,7 @@ job "${job_name}" {
       config {
         image                  = "ghcr.io/sargassum-world/fluitans:${fluitans_version}"
         ports                  = ["webapp"]
-        advertise_ipv6_address = true
+        # advertise_ipv6_address = true
 
         mount {
           type     = "volume"
@@ -84,7 +84,7 @@ job "${job_name}" {
         name         = "${service_name}"
         provider     = "nomad"
         port         = "webapp"
-        address_mode = "driver"
+        # address_mode = "driver"
         tags = [
           "caddy.enable=true",
           "caddy.reverse_proxy.public=${public_service}",
@@ -108,7 +108,7 @@ job "${job_name}" {
       config {
         image                  = "ghcr.io/sargassum-world/docker-zerotier-controller:v1.10.1"
         ports                  = ["zerotier_api"]
-        advertise_ipv6_address = true
+        # advertise_ipv6_address = true
 
         mount {
           type     = "volume"
@@ -140,7 +140,7 @@ job "${job_name}" {
         name         = "${service_name}-ztcontroller"
         provider     = "nomad"
         port         = "zerotier_api"
-        address_mode = "driver"
+        # address_mode = "driver"
         tags = [
           "caddy.enable=true",
           "caddy.reverse_proxy.public=${ztcontroller_public_service}",
