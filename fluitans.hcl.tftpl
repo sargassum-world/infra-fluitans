@@ -11,18 +11,14 @@ job "${job_name}" {
     max_parallel = 1
   }
 
-  group "app" {
+  group "webapp" {
     count = 1
 
     network {
       mode = "host"
-      port "webapp" {
+      port "http" {
         host_network = "${host_network}"
         to = 3000
-      }
-      port "zerotier_api" {
-        host_network = "${host_network}"
-        to = 9993
       }
     }
 
@@ -31,7 +27,7 @@ job "${job_name}" {
 
       config {
         image                  = "ghcr.io/sargassum-world/fluitans:${fluitans_version}"
-        ports                  = ["webapp"]
+        ports                  = ["http"]
         advertise_ipv6_address = true
 
         mount {
@@ -59,13 +55,13 @@ job "${job_name}" {
         # We have to manually process IP addresses to wrap square brackets around IPv6 addresses,
         # because apparently Nomad doesn't do that.
         data = <<-EOH
-          {{- $ip := env "NOMAD_IP_zerotier_api" -}}
-          {{- $port := env "NOMAD_HOST_PORT_zerotier_api" -}}
-          {{- $isIPv6 := sprig_contains ":" $ip -}}
-          {{- if $isIPv6 -}}
-            ZTCONTROLLER_SERVER = "http://[{{$ip}}]:{{$port}}"
-          {{- else -}}
-            ZTCONTROLLER_SERVER = "http://{{$ip}}:{{$port}}"
+          {{- range $service := nomadService "${service_name}-ztcontroller" -}}
+            {{- $upstreamAddress := $service.Address -}}
+            {{- $isIPv6 := and (sprig_contains ":" $service.Address) (not (sprig_contains "://" $service.Address)) -}}
+            {{- if $isIPv6 -}}
+              {{- $upstreamAddress = printf "[%s]" $service.Address}}
+            {{- end}}
+            ZTCONTROLLER_SERVER = "{{$upstreamAddress}}:{{$service.Port}}"
           {{- end -}}
         EOH
         destination = "local/ztcontroller.env"
@@ -101,7 +97,7 @@ job "${job_name}" {
       service {
         name     = "${service_name}"
         provider = "nomad"
-        port     = "webapp"
+        port     = "http"
         tags = [
           "caddy.enable=true",
           "caddy.reverse_proxy.public=${public_service}",
@@ -116,6 +112,18 @@ job "${job_name}" {
           interval     = "5s"
           timeout      = "2s"
         }
+      }
+    }
+  }
+
+  group "controller" {
+    count = 1
+
+    network {
+      mode = "host"
+      port "zerotier_api" {
+        host_network = "${host_network}"
+        to = 9993
       }
     }
 
@@ -140,10 +148,6 @@ job "${job_name}" {
           source   = "secrets/authtoken.secret"
           readonly = true
         }
-      }
-
-      env {
-        API_PORT = "$${NOMAD_PORT_zerotier_api}" # Nomad variable, not Terraform template variable
       }
 
       template {
