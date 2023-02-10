@@ -59,7 +59,7 @@ job "${job_name}" {
             {{- $upstreamAddress := $service.Address -}}
             {{- $isIPv6 := and (sprig_contains ":" $service.Address) (not (sprig_contains "://" $service.Address)) -}}
             {{- if $isIPv6 -}}
-              {{- $upstreamAddress = printf "[%s]" $service.Address}}
+              {{- $upstreamAddress = printf "http://[%s]" $service.Address}}
             {{- end}}
             ZTCONTROLLER_SERVER = "{{$upstreamAddress}}:{{$service.Port}}"
           {{- end -}}
