@@ -17,9 +17,11 @@ job "${job_name}" {
     network {
       mode = "host"
       port "webapp" {
+        host_network = "${host_network}"
         to = 3000
       }
       port "zerotier_api" {
+        host_network = "${host_network}"
         to = 9993
       }
     }
