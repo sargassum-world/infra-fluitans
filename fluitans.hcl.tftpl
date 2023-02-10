@@ -95,7 +95,6 @@ job "${job_name}" {
           path         = "/"
           interval     = "5s"
           timeout      = "2s"
-          address_mode = "driver"
         }
       }
     }
@@ -149,7 +148,6 @@ job "${job_name}" {
           path         = "/status"
           interval     = "5s"
           timeout      = "2s"
-          address_mode = "driver"
 
           header {
             X-ZT1-Auth = ["${ztcontroller_authtoken}"]
