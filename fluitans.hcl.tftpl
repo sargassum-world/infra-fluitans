@@ -53,7 +53,9 @@ job "${job_name}" {
             {{- if $isIPv6 -}}
               {{- $upstreamAddress = printf "http://[%s]" $service.Address}}
             {{- end}}
+            # {{$service}}
             ZTCONTROLLER_SERVER = "{{$upstreamAddress}}:{{$service.Port}}"
+            ZTCONTROLLER_NAME = "{{$service.Name}}"
           {{- end -}}
         EOH
         destination = "local/ztcontroller.env"
