@@ -79,9 +79,10 @@ job "${job_name}" {
       }
 
       service {
-        name     = "${service_name}"
-        provider = "nomad"
-        port     = "webapp"
+        name         = "${service_name}"
+        provider     = "nomad"
+        port         = "webapp"
+        address_mode = "driver"
         tags = [
           "caddy.enable=true",
           "caddy.reverse_proxy.public=${public_service}",
@@ -134,9 +135,10 @@ job "${job_name}" {
       }
 
       service {
-        name     = "${service_name}-ztcontroller"
-        provider = "nomad"
-        port     = "zerotier_api"
+        name         = "${service_name}-ztcontroller"
+        provider     = "nomad"
+        port         = "zerotier_api"
+        address_mode = "driver"
         tags = [
           "caddy.enable=true",
           "caddy.reverse_proxy.public=${ztcontroller_public_service}",
