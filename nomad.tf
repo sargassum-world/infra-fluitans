@@ -34,7 +34,8 @@ resource "nomad_job" "fluitans" {
     job_name                    = replace(var.job_name, "-", "_")
     datacenter                  = var.job_datacenter
     hostname_constraint         = var.job_hostname_constraint
-    host_network                = var.job_host_network
+    webapp_host_network         = var.job_webapp_host_network
+    ztcontroller_host_network   = var.job_ztcontroller_host_network
     service_name                = replace(var.job_name, "_", "-")
     public_service              = var.job_service_public
     publish_service             = var.job_service_custom_name != ""

@@ -17,11 +17,13 @@ job "${job_name}" {
     network {
       mode = "host"
       port "webapp" {
-        host_network = "${host_network}"
+        host_network = "${webapp_host_network}"
         to = 3000
       }
       port "zerotier_api" {
-        host_network = "${host_network}"
+        # When IPv6 support is enabled in Docker, ZeroTier One only sends empty responses. So we 
+        # can't use an IPv6 host network - instead, this must be an IPv4 host network.
+        host_network = "${ztcontroller_host_network}"
         to = 9993
       }
     }
@@ -42,31 +44,16 @@ job "${job_name}" {
       }
 
       env {
-        DNS_DOMAIN_NAME = "${dns_domain_name}"
-        DNS_SERVER      = "https://desec.io"
-        DATABASE_URI    = "file:/var/fluitans/data/db.sqlite3"
-      }
-
-      template {
-        # For nicer display names by indirection we could instead use the reverse-proxied domain
-        # name, e.g. fluitans-pslive-ztcontroller.s.foundations.infra.sargassum.world instead of a
-        # bare IP address. However, that may not be necessary - and it would introduce coupling with
-        # the platform's Caddy configuration. It would be better to instead associate display names
-        # with controller ZeroTier addresses in a database table in Fluitans.
-        # We have to manually process IP addresses to wrap square brackets around IPv6 addresses,
-        # because apparently Nomad doesn't do that.
-        data = <<-EOH
-          {{- $ip := env "NOMAD_IP_zerotier_api" -}}
-          {{- $port := env "NOMAD_HOST_PORT_zerotier_api" -}}
-          {{- $isIPv6 := sprig_contains ":" $ip -}}
-          {{- if $isIPv6 -}}
-            ZTCONTROLLER_SERVER = "http://[{{$ip}}]:{{$port}}"
-          {{- else -}}
-            ZTCONTROLLER_SERVER = "http://{{$ip}}:{{$port}}"
-          {{- end -}}
-        EOH
-        destination = "local/ztcontroller.env"
-        env         = true
+        # For nicer display names by indirection and HTTPS we could instead use the reverse-proxied
+        # domain name, e.g. fluitans-pslive-ztcontroller.s.foundations.infra.sargassum.world instead
+        # of a bare IP address. However, that may not be necessary - and it would introduce coupling
+        # with the platform's Caddy configuration. It would be better to instead associate display
+        # names with controller ZeroTier addresses in a database table in Fluitans. And for HTTPS
+        # we should just use Consul Connect.
+        ZTCONTROLLER_SERVER = "http://$${NOMAD_ADDR_zerotier_api}" # Nomad variable, not Terraform template variable
+        DNS_DOMAIN_NAME     = "${dns_domain_name}"
+        DNS_SERVER          = "https://desec.io"
+        DATABASE_URI        = "file:/var/fluitans/data/db.sqlite3"
       }
 
       template {
