@@ -24,7 +24,6 @@ job "${job_name}" {
         # When IPv6 support is enabled in Docker, ZeroTier One only sends empty responses. So we 
         # can't use an IPv6 host network - instead, this must be an IPv4 host network.
         host_network = "${ztcontroller_host_network}"
-        to = 9993
       }
     }
 
@@ -50,10 +49,27 @@ job "${job_name}" {
         # with the platform's Caddy configuration. It would be better to instead associate display
         # names with controller ZeroTier addresses in a database table in Fluitans. And for HTTPS
         # we should just use Consul Connect.
-        ZTCONTROLLER_SERVER = "http://$${NOMAD_ADDR_zerotier_api}" # Nomad variable, not Terraform template variable
+        # ZTCONTROLLER_SERVER = "http://$${NOMAD_ADDR_zerotier_api}" # Nomad variable, not Terraform template variable
         DNS_DOMAIN_NAME     = "${dns_domain_name}"
         DNS_SERVER          = "https://desec.io"
         DATABASE_URI        = "file:/var/fluitans/data/db.sqlite3"
+      }
+
+      template {
+        # We have to manually process IP addresses to wrap square brackets around IPv6 addresses,
+        # because apparently Nomad doesn't do that.
+        data = <<-EOH
+          {{- $ip := env "NOMAD_IP_zerotier_api" -}}
+          {{- $port := env "NOMAD_HOST_PORT_zerotier_api" -}}
+          {{- $isIPv6 := sprig_contains ":" $ip -}}
+          {{- if $isIPv6 -}}
+            ZTCONTROLLER_SERVER = "http://[{{$ip}}]:{{$port}}"
+          {{- else -}}
+            ZTCONTROLLER_SERVER = "http://{{$ip}}:{{$port}}"
+          {{- end -}}
+        EOH
+        destination = "local/ztcontroller.env"
+        env         = true
       }
 
       template {
@@ -107,7 +123,7 @@ job "${job_name}" {
       driver = "docker"
 
       config {
-        image = "ghcr.io/sargassum-world/docker-zerotier-controller:v1.10.1"
+        image = "ghcr.io/sargassum-world/docker-zerotier-controller:v1.10.2"
         ports = ["zerotier_api"]
 
         mount {
@@ -123,6 +139,10 @@ job "${job_name}" {
           source   = "secrets/authtoken.secret"
           readonly = true
         }
+      }
+
+      env {
+        API_PORT = "$${NOMAD_PORT_zerotier_api}" # Nomad variable, not Terraform template variable
       }
 
       template {

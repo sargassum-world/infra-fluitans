@@ -49,7 +49,7 @@ variable "job_webapp_host_network" {
 variable "job_ztcontroller_host_network" {
   type        = string
   description = "Name of the host network to use for the ZeroTier controller"
-  default     = "default"
+  default     = "foundations_ipv6"
 }
 
 variable "job_service_public" {
