@@ -40,15 +40,9 @@ variable "job_hostname_constraint" {
   description = "Hostname of the Nomad node to run the job"
 }
 
-variable "job_webapp_host_network" {
+variable "job_host_network" {
   type        = string
-  description = "Name of the host network to use for the webapp"
-  default     = "foundations_ipv6"
-}
-
-variable "job_ztcontroller_host_network" {
-  type        = string
-  description = "Name of the host network to use for the ZeroTier controller"
+  description = "Name of the host network to use for port bindings"
   default     = "foundations_ipv6"
 }
 
