@@ -57,7 +57,7 @@ job "${job_name}" {
         # because apparently Nomad doesn't do that.
         data = <<-EOH
           {{- $ip := env "NOMAD_IP_zerotier_api" -}}
-          {{- $port := env "NOMAD_PORT_zerotier_api" -}}
+          {{- $port := env "NOMAD_HOST_PORT_zerotier_api" -}}
           {{- $isIPv6 := sprig_contains ":" $ip -}}
           {{- if $isIPv6 -}}
             ZTCONTROLLER_SERVER = "http://[{{$ip}}]:{{$port}}"
