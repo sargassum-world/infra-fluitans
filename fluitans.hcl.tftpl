@@ -102,7 +102,9 @@ job "${job_name}" {
         check {
           type         = "http"
           port         = "http"
-          path         = "/"
+          # TODO: implement a proper health-checking route! It should not cause creation of a new
+          # session each time.
+          path         = "/app/offline"
           interval     = "5s"
           timeout      = "2s"
         }
